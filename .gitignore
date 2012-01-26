@@ -1,0 +1,5 @@
+*.suo
+*.docstates
+*.user
+DiffMergeSelector/bin/
+DiffMergeSelector/obj/
