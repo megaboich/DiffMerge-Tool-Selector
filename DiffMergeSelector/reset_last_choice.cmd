@@ -1,0 +1,1 @@
+call DiffMergeSelector.exe -r

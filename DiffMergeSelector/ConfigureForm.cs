@@ -9,12 +9,13 @@ using System.Windows.Forms;
 using DiffMergeProxyRunner.Models;
 using DiffMergeProxyRunner.Services;
 using DiffMergeSelector.Services;
+using DiffMergeSelector.Models;
 
 namespace DiffMergeProxyRunner
 {
     public partial class ConfigureForm : Form
     {
-        ToolsStorage ToolsStorage;
+        Config Config;
 
         public ConfigureForm()
         {
@@ -22,9 +23,9 @@ namespace DiffMergeProxyRunner
 
             listView1.ListViewItemSorter = new ListViewOrderComparer();
 
-            ToolsStorage = new Services.ToolsStorage();
+            Config = Config.Load();
 
-            FillLists(ToolsStorage.Load());
+            FillLists(Config.ToolParameters);
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -113,8 +114,8 @@ namespace DiffMergeProxyRunner
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            ToolsStorage.Save(GetDataFromUI().ToArray());
-
+            Config.ToolParameters = GetDataFromUI().ToArray();
+            Config.Save();
             Close();
         }
 

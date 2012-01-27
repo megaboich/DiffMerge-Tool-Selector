@@ -40,6 +40,10 @@
             this.lvTools = new System.Windows.Forms.ListView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.chRememberChoice = new System.Windows.Forms.CheckBox();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -98,6 +102,7 @@
             this.lvTools.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
             listViewGroup1,
             listViewGroup2});
+            this.lvTools.HideSelection = false;
             this.lvTools.LargeImageList = this.imageList1;
             this.lvTools.Location = new System.Drawing.Point(18, 210);
             this.lvTools.Name = "lvTools";
@@ -124,11 +129,50 @@
             this.checkBox1.Text = "Close me after tool start";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
+            // chRememberChoice
+            // 
+            this.chRememberChoice.AutoSize = true;
+            this.chRememberChoice.Location = new System.Drawing.Point(221, 172);
+            this.chRememberChoice.Name = "chRememberChoice";
+            this.chRememberChoice.Size = new System.Drawing.Size(146, 17);
+            this.chRememberChoice.TabIndex = 9;
+            this.chRememberChoice.Text = "Remember my choice for ";
+            this.chRememberChoice.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(367, 171);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(67, 20);
+            this.numericUpDown1.TabIndex = 10;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(440, 173);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(43, 13);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "minutes";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(659, 493);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.chRememberChoice);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.lvTools);
             this.Controls.Add(this.btnConfigureDiffMergeTools);
@@ -139,6 +183,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DiffMerge Tool Selector";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -154,6 +199,9 @@
         private System.Windows.Forms.Button btnConfigureDiffMergeTools;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox chRememberChoice;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Label label2;
     }
 }
 

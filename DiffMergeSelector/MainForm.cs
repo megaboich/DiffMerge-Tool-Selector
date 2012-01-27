@@ -9,32 +9,25 @@ using System.Windows.Forms;
 using DiffMergeProxyRunner.Services;
 using System.IO;
 using DiffMergeProxyRunner.Models;
+using DiffMergeSelector.Models;
 
 namespace DiffMergeProxyRunner
 {
     public partial class MainForm : Form
     {
-        ToolsStorage ToolsStorage;
         string[] _parameters;
 
         public MainForm(string[] parameters)
         {
             InitializeComponent();
 
-            int i = 0;
             _parameters = parameters;
-            parameters.ToList().ForEach(p =>
-            {
-                lvParams.Items.Add(new ListViewItem(new[] { (++i).ToString(), p }));
-            });
-
-            ToolsStorage = new ToolsStorage();
-            FillLists();
         }
 
         private void FillLists()
         {
-            var dataItems = ToolsStorage.Load();
+            var config = Config.Load();
+            var dataItems = config.ToolParameters;
 
             lvTools.BeginUpdate();
             lvTools.Items.Clear();
@@ -67,7 +60,26 @@ namespace DiffMergeProxyRunner
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            int i = 0;
             
+            _parameters.ToList().ForEach(p =>
+            {
+                lvParams.Items.Add(new ListViewItem(new[] { (++i).ToString(), p }));
+            });
+
+            FillLists();
+
+            var config = Config.Load();
+            if (config.LastChoiceToolIndex < lvTools.Items.Count)
+            {
+                lvTools.Items[config.LastChoiceToolIndex].Selected = true;
+            }
+            numericUpDown1.Value = config.LastChoiceDuration;
+            if (DateTime.Now < config.LastChoiceValid)
+            {
+                var tp = (ToolParameters)lvTools.Items[config.LastChoiceToolIndex].Tag;
+                Execute(tp);
+            }
         }
 
         private void btnConfigureDiffMergeTools_Click(object sender, EventArgs e)
@@ -100,6 +112,15 @@ namespace DiffMergeProxyRunner
 
         private void Execute(ToolParameters tp)
         {
+            if (chRememberChoice.Checked)
+            {
+                var config = Config.Load();
+                config.LastChoiceToolIndex = lvTools.SelectedIndices[0];
+                config.LastChoiceDuration = (int)numericUpDown1.Value;
+                config.LastChoiceValid = DateTime.Now.AddMinutes((int)numericUpDown1.Value);
+                config.Save();
+            }
+
             var commandLine = tp.CommandLine;
 
             if (string.IsNullOrWhiteSpace(commandLine))
@@ -125,11 +146,21 @@ namespace DiffMergeProxyRunner
                 ShowInTaskbar = false;
             }
 
-            var process = System.Diagnostics.Process.Start(tp.Path, commandLine);
+            try
+            {
+                var process = System.Diagnostics.Process.Start(tp.Path, commandLine);
+                if (checkBox1.Checked)
+                {
+                    process.WaitForExit();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             
             if (checkBox1.Checked)
             {
-                process.WaitForExit();
                 Close();
             }
         }
