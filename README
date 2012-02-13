@@ -1,2 +1,3 @@
-This is simple application to help select diff tool on the fly.
-bla bla
+DiffMergeSelector is a simple application to help select diff tool on the fly.
+
+Includes UI to configure all tools, also configuration stored in XML file and can be edited manually.
