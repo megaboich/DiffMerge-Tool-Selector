@@ -1,4 +1,4 @@
-﻿namespace DiffMergeProxyRunner
+﻿namespace DiffMergeSelector
 {
     partial class ToolOptionsForm
     {

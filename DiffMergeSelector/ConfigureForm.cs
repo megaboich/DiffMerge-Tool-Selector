@@ -6,26 +6,22 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using DiffMergeProxyRunner.Models;
-using DiffMergeProxyRunner.Services;
+using DiffMergeSelector.Models;
+using DiffMergeSelector.Services;
 using DiffMergeSelector.Services;
 using DiffMergeSelector.Models;
 
-namespace DiffMergeProxyRunner
+namespace DiffMergeSelector
 {
     public partial class ConfigureForm : Form
     {
-        Config Config;
-
         public ConfigureForm()
         {
             InitializeComponent();
 
             listView1.ListViewItemSorter = new ListViewOrderComparer();
 
-            Config = Config.Load();
-
-            FillLists(Config.ToolParameters);
+            FillLists(Config.Instance.ToolParameters);
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -114,8 +110,8 @@ namespace DiffMergeProxyRunner
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            Config.ToolParameters = GetDataFromUI().ToArray();
-            Config.Save();
+            Config.Instance.ToolParameters = GetDataFromUI().ToArray();
+            Config.Instance.Save();
             Close();
         }
 

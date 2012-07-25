@@ -6,27 +6,34 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using DiffMergeProxyRunner.Services;
+using DiffMergeSelector.Services;
 using System.IO;
-using DiffMergeProxyRunner.Models;
 using DiffMergeSelector.Models;
+using DiffMergeSelector.Models;
+using DiffMergeSelector;
+using DiffMergeSelector.Services;
 
-namespace DiffMergeProxyRunner
+namespace DiffMergeSelector
 {
     public partial class MainForm : Form
     {
         string[] _parameters;
-
-        public MainForm(string[] parameters)
+        
+        public MainForm()
         {
             InitializeComponent();
 
-            _parameters = parameters;
+            _parameters = Environment.GetCommandLineArgs().Skip(1).ToArray();
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            AppForm.Instance.Value.AutoCloseWhenFinished = true;
         }
 
         private void FillLists()
         {
-            var config = Config.Load();
+            var config = Config.Instance;
             var dataItems = config.ToolParameters;
 
             lvTools.BeginUpdate();
@@ -43,7 +50,7 @@ namespace DiffMergeProxyRunner
                 {
                     if (File.Exists(dataItem.Path))
                     {
-                        var iconForFile = System.Drawing.Icon.ExtractAssociatedIcon(dataItem.Path);
+                        var iconForFile = dataItem.GetAssociatedIcon();
                         imageList1.Images.Add(iconForFile);
                         item.ImageIndex = imageList1.Images.Count - 1;
                     }
@@ -69,17 +76,14 @@ namespace DiffMergeProxyRunner
 
             FillLists();
 
-            var config = Config.Load();
+            var config = Config.Instance;
             if (config.LastChoiceToolIndex < lvTools.Items.Count)
             {
                 lvTools.Items[config.LastChoiceToolIndex].Selected = true;
             }
             numericUpDown1.Value = config.LastChoiceDuration;
-            if (DateTime.Now < config.LastChoiceValid)
-            {
-                var tp = (ToolParameters)lvTools.Items[config.LastChoiceToolIndex].Tag;
-                Execute(tp);
-            }
+
+            Activate();
         }
 
         private void btnConfigureDiffMergeTools_Click(object sender, EventArgs e)
@@ -100,69 +104,20 @@ namespace DiffMergeProxyRunner
             }
         }
 
-        private string GetParam(int index)
-        {
-            if (index >= _parameters.Length)
-            {
-                return string.Empty;
-            }
-
-            return "\"" + _parameters[index] + "\"";
-        }
-
         private void Execute(ToolParameters tp)
         {
             if (chRememberChoice.Checked)
             {
-                var config = Config.Load();
+                var config = Config.Instance;
                 config.LastChoiceToolIndex = lvTools.SelectedIndices[0];
                 config.LastChoiceDuration = (int)numericUpDown1.Value;
-                config.LastChoiceValid = DateTime.Now.AddMinutes((int)numericUpDown1.Value);
+                config.LastChoiceValid = DateTime.Now.AddMinutes(config.LastChoiceDuration);
                 config.Save();
             }
 
-            var commandLine = tp.CommandLine;
+            ToolExecutionManager.ExecuteTool(tp, _parameters);
 
-            if (string.IsNullOrWhiteSpace(commandLine))
-            {
-                commandLine = "%1 %2 %3 %4 %5 %6 %7 %8 %9";
-            }
-
-            commandLine = commandLine
-                .Replace("%1", GetParam(0))
-                .Replace("%2", GetParam(1))
-                .Replace("%3", GetParam(2))
-                .Replace("%4", GetParam(3))
-                .Replace("%5", GetParam(4))
-                .Replace("%6", GetParam(5))
-                .Replace("%7", GetParam(6))
-                .Replace("%8", GetParam(7))
-                .Replace("%9", GetParam(8))
-                ;
-
-            if (checkBox1.Checked)
-            {
-                Hide();
-                ShowInTaskbar = false;
-            }
-
-            try
-            {
-                var process = System.Diagnostics.Process.Start(tp.Path, commandLine);
-                if (checkBox1.Checked)
-                {
-                    process.WaitForExit();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            
-            if (checkBox1.Checked)
-            {
-                Close();
-            }
+            Close();
         }
     }
 }

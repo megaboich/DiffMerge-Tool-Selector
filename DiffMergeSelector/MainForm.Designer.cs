@@ -1,4 +1,4 @@
-﻿namespace DiffMergeProxyRunner
+﻿namespace DiffMergeSelector
 {
     partial class MainForm
     {
@@ -39,7 +39,6 @@
             this.btnConfigureDiffMergeTools = new System.Windows.Forms.Button();
             this.lvTools = new System.Windows.Forms.ListView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.chRememberChoice = new System.Windows.Forms.CheckBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
@@ -117,18 +116,6 @@
             this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(18, 172);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(136, 17);
-            this.checkBox1.TabIndex = 8;
-            this.checkBox1.Text = "Close me after tool start";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
             // chRememberChoice
             // 
             this.chRememberChoice.AutoSize = true;
@@ -173,7 +160,6 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.chRememberChoice);
-            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.lvTools);
             this.Controls.Add(this.btnConfigureDiffMergeTools);
             this.Controls.Add(this.lvParams);
@@ -182,6 +168,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DiffMerge Tool Selector";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
@@ -198,7 +185,6 @@
         private System.Windows.Forms.ListView lvTools;
         private System.Windows.Forms.Button btnConfigureDiffMergeTools;
         private System.Windows.Forms.ImageList imageList1;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.CheckBox chRememberChoice;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label2;

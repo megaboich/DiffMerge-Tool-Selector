@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Xml;
 
-namespace DiffMergeProxyRunner.Services
+namespace DiffMergeSelector.Services
 {
     public static class XmlSerializer
     {

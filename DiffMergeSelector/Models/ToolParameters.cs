@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 
-namespace DiffMergeProxyRunner.Models
+namespace DiffMergeSelector.Models
 {
     public enum ToolCategory
     {
@@ -22,5 +23,19 @@ namespace DiffMergeProxyRunner.Models
         public string CommandLine { get; set; }
 
         public int OrderIndex { get; set; }
+
+        public string CustomImagePath { get; set; }
+
+        public Image GetAssociatedIcon()
+        {
+            if (!string.IsNullOrEmpty(CustomImagePath))
+            {
+                return Bitmap.FromFile(CustomImagePath);
+            }
+            else
+            {
+                return Icon.ExtractAssociatedIcon(Path).ToBitmap();
+            }
+        }
     }
 }
