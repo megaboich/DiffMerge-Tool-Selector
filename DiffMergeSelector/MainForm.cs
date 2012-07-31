@@ -46,18 +46,11 @@ namespace DiffMergeSelector
                 item.Tag = dataItem;
                 item.Group = lvTools.Groups[(int)dataItem.ToolCategory];
 
-                try
+                var img = dataItem.GetAssociatedIcon();
+                if (img != null)
                 {
-                    if (File.Exists(dataItem.Path))
-                    {
-                        var iconForFile = dataItem.GetAssociatedIcon();
-                        imageList1.Images.Add(iconForFile);
-                        item.ImageIndex = imageList1.Images.Count - 1;
-                    }
-                }
-                catch
-                {
-
+                    imageList1.Images.Add(img);
+                    item.ImageIndex = imageList1.Images.Count - 1;
                 }
                 
                 lvTools.Items.Add(item);
@@ -81,7 +74,6 @@ namespace DiffMergeSelector
             {
                 lvTools.Items[config.LastChoiceToolIndex].Selected = true;
             }
-            numericUpDown1.Value = config.LastChoiceDuration;
 
             Activate();
         }
@@ -110,7 +102,7 @@ namespace DiffMergeSelector
             {
                 var config = Config.Instance;
                 config.LastChoiceToolIndex = lvTools.SelectedIndices[0];
-                config.LastChoiceDuration = (int)numericUpDown1.Value;
+                config.LastChoiceDuration = 100;
                 config.LastChoiceValid = DateTime.Now.AddMinutes(config.LastChoiceDuration);
                 config.Save();
             }

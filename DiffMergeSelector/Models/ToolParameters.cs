@@ -28,14 +28,34 @@ namespace DiffMergeSelector.Models
 
         public Image GetAssociatedIcon()
         {
-            if (!string.IsNullOrEmpty(CustomImagePath))
+            try
             {
-                return Bitmap.FromFile(CustomImagePath);
+                if (!string.IsNullOrEmpty(CustomImagePath))
+                {
+                    return Bitmap.FromFile(CustomImagePath);
+                }
+                else
+                {
+                    return Icon.ExtractAssociatedIcon(Path).ToBitmap();
+                }
             }
-            else
+            catch
             {
-                return Icon.ExtractAssociatedIcon(Path).ToBitmap();
+                return null;
             }
+        }
+
+        public ToolParameters Clone()
+        {
+            return new ToolParameters
+            {
+                CommandLine = CommandLine,
+                CustomImagePath = CustomImagePath,
+                Name = Name,
+                OrderIndex = OrderIndex,
+                Path = Path,
+                ToolCategory = ToolCategory
+            };
         }
     }
 }

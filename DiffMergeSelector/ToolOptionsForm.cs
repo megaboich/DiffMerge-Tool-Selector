@@ -17,30 +17,53 @@ namespace DiffMergeSelector
         public ToolOptionsForm(ToolParameters toolParameters)
         {
             InitializeComponent();
-            ToolParameters = toolParameters;
+            
 
-            if (ToolParameters != null)
+            if (toolParameters != null)
             {
-                edName.Text = ToolParameters.Name;
-                edPath.Text = ToolParameters.Path;
-                edCommandLine.Text = ToolParameters.CommandLine;
-                switch (ToolParameters.ToolCategory)
-                {
-                    case ToolCategory.Diff:
-                        rbDiff.Checked = true;
-                        break;
-                    case ToolCategory.Merge:
-                        rbMerge.Checked = true;
-                        break;
-                }
+                ToolParameters = toolParameters.Clone();
             }
+            else
+            {
+                ToolParameters = new ToolParameters();
+            }
+
+            edName.Text = ToolParameters.Name;
+            edPath.Text = ToolParameters.Path;
+            edCommandLine.Text = ToolParameters.CommandLine;
+            edIcon.Text = ToolParameters.CustomImagePath;
+            switch (ToolParameters.ToolCategory)
+            {
+                case ToolCategory.Diff:
+                    rbDiff.Checked = true;
+                    break;
+                case ToolCategory.Merge:
+                    rbMerge.Checked = true;
+                    break;
+            }
+
+            imgIcon.Image = ToolParameters.GetAssociatedIcon();
         }
 
         private void btnBrowsePath_Click(object sender, EventArgs e)
         {
+            openFileDialog1.Filter = "Exe files|*.exe;*.cmd;*.bat|All files|*.*";
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 edPath.Text = openFileDialog1.FileName;
+                ToolParameters.Path = edPath.Text;
+                imgIcon.Image = ToolParameters.GetAssociatedIcon();
+            }
+        }
+
+        private void btnBrowseIcon_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Filter = "Images files|*.jpg;*.jpeg;*.png;*.bmp;*.ico;*.gif|All files|*.*";
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                edIcon.Text = openFileDialog1.FileName;
+                ToolParameters.CustomImagePath = edIcon.Text;
+                imgIcon.Image = ToolParameters.GetAssociatedIcon();
             }
         }
 
@@ -64,6 +87,7 @@ namespace DiffMergeSelector
             {
                 Name = edName.Text,
                 Path = edPath.Text,
+                CustomImagePath = edIcon.Text,
                 CommandLine = edCommandLine.Text,
                 ToolCategory = rbDiff.Checked ? ToolCategory.Diff : ToolCategory.Merge,
             };
@@ -76,6 +100,11 @@ namespace DiffMergeSelector
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void edPath_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

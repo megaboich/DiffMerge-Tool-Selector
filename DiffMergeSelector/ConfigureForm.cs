@@ -19,8 +19,6 @@ namespace DiffMergeSelector
         {
             InitializeComponent();
 
-            listView1.ListViewItemSorter = new ListViewOrderComparer();
-
             FillLists(Config.Instance.ToolParameters);
         }
 
@@ -53,7 +51,8 @@ namespace DiffMergeSelector
                 if (tof.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     tp = tof.ToolParameters;
-                    FillListItem(item, tp);
+                    item.Tag = tp;
+                    FillLists(GetDataFromUI());
                 }
             }
         }
@@ -62,9 +61,9 @@ namespace DiffMergeSelector
         {
             item.Tag = tp;
             item.Group = listView1.Groups[(int)tp.ToolCategory];
-            item.SubItems.Clear();
-            item.Text = tp.Name;
+            item.Text = "  " + tp.Name;
             item.Name = tp.Name;
+            item.SubItems.Clear();
             item.SubItems.Add(tp.Path);
             item.SubItems.Add(tp.CommandLine);
         }
@@ -73,10 +72,17 @@ namespace DiffMergeSelector
         {
             listView1.BeginUpdate();
             listView1.Items.Clear();
+            imageList1.Images.Clear();
             foreach (var dataItem in dataItems)
             {
                 var item = new ListViewItem();
                 FillListItem(item, dataItem);
+                var img = dataItem.GetAssociatedIcon();
+                if (img != null)
+                {
+                    imageList1.Images.Add(img);
+                    item.ImageIndex = imageList1.Images.Count - 1;
+                }
                 listView1.Items.Add(item);
             }
             listView1.Sort();
@@ -144,7 +150,15 @@ namespace DiffMergeSelector
                 var t = othData.OrderIndex;
                 othData.OrderIndex = data.OrderIndex;
                 data.OrderIndex = t;
-                listView1.Sort();
+
+                FillLists(GetDataFromUI());
+                foreach (ListViewItem it in listView1.Items)
+                {
+                    if (it.Tag == (object)data)
+                    {
+                        it.Selected = true;
+                    }
+                }
             }
         }
 
@@ -167,7 +181,15 @@ namespace DiffMergeSelector
                 var t = othData.OrderIndex;
                 othData.OrderIndex = data.OrderIndex;
                 data.OrderIndex = t;
-                listView1.Sort();
+
+                FillLists(GetDataFromUI());
+                foreach (ListViewItem it in listView1.Items)
+                {
+                    if (it.Tag == (object)data)
+                    {
+                        it.Selected = true;
+                    }
+                }
             }
         }
     }
